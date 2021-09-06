@@ -10,7 +10,7 @@ For doctor it is possible to enter tip and other patient requirement and to keep
 #include<iomanip>// used to construct table with proper width.
 #include<cmath>//used to calculation pary
 #include<cstdlib>//used for using setw which is for size of space
-#include<stdio.h>
+
 
 using namespace std;
 
@@ -743,8 +743,8 @@ Hos.hos_add={"Addiss Ababa","Kolfe Keranyo",05,1,"birhanu_centrhos@gmail.com","0
 
 cout<<"Name of Hospital: "<<Hos.name<<endl;
 cout<<"\n->Service that "<<Hos.name<<" provide: "<<endl<<Hos.service<<endl;
-cout<<"\n General information:"<<"\n ->President — Peter L. Slavin,\n-> Total certified beds — 907\n-> Total employees (part- and full-time) — 23,302\n-> Total operating revenue — $612 million"<<endl;
-cout<<"\nPatient and surgical statistics: "<<"\n #Total inpatients — 47,250\n #Average length of stay — 5.82 days\n #Admissions to observe — 7,978\n #Total surgical cases — 36,701\n #Inpatient surgical cases — 19,233\n #Ambulatory surgical cases — 17,468"<<endl;
+cout<<"\n General information:"<<"\n ->President Â— Peter L. Slavin,\n-> Total certified beds Â— 907\n-> Total employees (part- and full-time) Â— 23,302\n-> Total operating revenue Â— $612 million"<<endl;
+cout<<"\nPatient and surgical statistics: "<<"\n #Total inpatients Â— 47,250\n #Average length of stay Â— 5.82 days\n #Admissions to observe Â— 7,978\n #Total surgical cases Â— 36,701\n #Inpatient surgical cases Â— 19,233\n #Ambulatory surgical cases Â— 17,468"<<endl;
 cout<<"\nDoctors information in "<<Hos.name<<endl;
 cout<<"______________________________________________________"<<endl;
 

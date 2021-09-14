@@ -8,9 +8,7 @@ For doctor it is possible to enter tip and other patient requirement and to keep
 #include <iostream>//input output stream.
 #include<string.h>//string library.
 #include<iomanip>// used to construct table with proper width.
-#include<cmath>//used to calculation pary
-#include<cstdlib>//used for using setw which is for size of space
-#include<stdio.h>
+#include<fstream>
 
 using namespace std;
 
@@ -28,7 +26,6 @@ struct appoint
 struct Doctors
 {
 string name;
-int age;
 char sex;
 string specialst;
 string schedule;
@@ -66,8 +63,8 @@ int date,month,year,age,kebele,wereda;
 
 string health_condition;
 string medicine_taken;
-int no_medicine,passcode,id;
-
+int no_medicine,id;
+string passcode,passcode2;
 string illnesses;
 string surgeries;
 int no_surgeries;
@@ -80,12 +77,10 @@ float cost;
 dateofadd dateadd;
 Address patiadd;
 
-double weight, height, heightt,bmi;
+double weight, height, heightT,bmi;
 string tipFromDoc,recommend,checkup,prescription;
-
 };
 
-//store the data that the doctors must fill
 struct doctors_form
 {
 string prescription;
@@ -94,9 +89,7 @@ string tip;
 string recommendation;
 string str1;
 int passcode;
-}d[1000];
-
-//function declaration
+}d;
 
 void menu();
 void patient();
@@ -107,7 +100,8 @@ void edit();
 void doctor();
 void hospital_information();
 void medicalTip();
-int c = 0, id = 1;
+int c = 0;//count patients being registered by using increment to count number of patients
+int id = 1;//to give unique id for patients and it help to search a patient
 
 struct patient_info p[1000];//patient_info structure global definition
 //here we call the menu function
@@ -123,7 +117,7 @@ return 0;
 //menu function definition it used to give different options for users that help him to fulfill his target
 //stores data for option
 void menu(){
-int opp;
+char opp;
 
     cout<<"            |=============================================================================|"<<endl;
     cout<<"            |==============This is HMSS hospital management system software===============|"<<endl;
@@ -133,50 +127,53 @@ int opp;
     cout<<"            |=================Option 4-For exit ==========================================|"<<endl;
     cout<<"            |=============================================================================|"<<endl;
 
-
 cout<<"\nEnter your choice from the option listed above: ";
+enter:
 cin>>opp;
+
+if(opp=='1'||opp=='2'||opp=='3'||opp=='4')
 switch(opp){
-case 1:
+case '1':
     system("cls");//used to clear screan
     patient();//patient function is being called
     break;
 
-case 2:
+case '2':
     system("cls");
     doctor();//doctores function is being called
     break;
 
-case 3:
+case '3':
     system("cls");
     hospital_information();//hospital information function is being called
     break;
 
-case 4:
-    exit(1);//closing the system
+case '4':
+  exit(0);
     break;
+}
+    else
+   cout<<"\nwrong input try again: ";
+goto enter;
 
-default:
-    //function
-    break;
 }
-}
+
 //patient function definition
 //patient options
 void patient(){
-int c;
+int choice;
 cout<<"=================Choose your option from listed below==============";
 
-cout<<"\n\t1.For patient registration"<<endl;
-cout<<"\t2.for existing patient login"<<endl;
-cout<<"\t3.for inpatient "<<endl;
-cout<<"\t4.For editing information"<<endl;
-cout<<"\t5.Back"<<endl;
+cout<<"\n\t[1].For new patient registration"<<endl;
+cout<<"\t[2].for existing patient login"<<endl;
+cout<<"\t[3].for inpatient "<<endl;
+cout<<"\t[4].For editing information"<<endl;
+cout<<"\t[5].Back main menu"<<endl;
 
 cout<<"\n\nEnter your option from listed above: ";
-cin>>c;
+cin>>choice;
 
-switch(c){
+switch(choice){
 case 1:
     system("cls");
     newPatient();//calling newpatient function
@@ -190,13 +187,11 @@ case 2:
  case 3:
      system("cls");
      inpatient();
-     menu();
     break;
 
  case 4:
      system("cls");
      edit();
-     menu();
     break;
 case 5:
      system("cls");
@@ -209,13 +204,13 @@ case 5:
 //registration will be occured....information of patients will be stored
 void newPatient(){
 
-int response;
+int response,inpsex=0,inblood=0;
+appoint ap;
+Hospitals Hos;
 
   for (int i = 0; i<1; i++){
-    appoint ap;
-    Hospitals Hos;
 
-Hos.hos_doc={"DR.Firdews Abrar",27,'f',"General Doctor","(Monday-Thursday)=4:00am-11:30pm,(Friday and Saturday)=2:30am-6:00am"};
+Hos.hos_doc={"DR.Firdews Abrar",'f',"General Doctor","(Monday-Thursday)=4:00am-11:30pm,(Friday and Saturday)=2:30am-6:00am"};
 
         cout<<"\nEnter the day, month and year of registration respectively on different line: "<<endl;
         cin>>p[i+c].dateadd.dd;
@@ -226,12 +221,13 @@ Hos.hos_doc={"DR.Firdews Abrar",27,'f',"General Doctor","(Monday-Thursday)=4:00a
   cout<<"\n\n-----------------------Personal Information Registration For Patient------------------------"<<endl;
 
      cout<<"\nEnter full  name : ";
-    cin.ignore();
+     cin.ignore();
      getline(cin,p[i+c].name);
 
      cout<<"\nAddress : ";
      cout<<"\nEnter city name: ";
-    cin.ignore();
+
+     cin.ignore();
      getline(cin,p[i+c].city);//used to string with spaces
 
      cout<<"\nEnter kfleketema : ";
@@ -259,11 +255,35 @@ Hos.hos_doc={"DR.Firdews Abrar",27,'f',"General Doctor","(Monday-Thursday)=4:00a
      cout<<"\nAge : ";
      cin>>p[i+c].age;
 
+     enter:
      cout<<"\nSex(m/f) : ";
      cin>>p[i+c].sex;
 
+     if ((strcmp (p[i+c].sex , "m" )==0)||(strcmp (p[i+c].sex , "f") == 0))
+     inpsex=1;
+
+     if(inpsex == 0)
+        {
+
+     cout <<"\n wrong input try again";
+     goto enter;
+
+        }
+        again:
      cout<<"\nBlood Group : ";
      cin>>p[i+c].blood;
+
+     if((strcmp(p[i+c].blood,"A+")==0)||(strcmp(p[i+c].blood,"a+")==0)||(strcmp(p[i+c].blood,"A-")==0)||(strcmp(p[i+c].blood,"a-")==0)||
+      (strcmp(p[i+c].blood,"B+")==0)||(strcmp(p[i+c].blood,"b+")==0)||(strcmp(p[i+c].blood,"B-")==0)||(strcmp(p[i+c].blood,"b-")==0)||
+      (strcmp(p[i+c].blood,"O+")==0)||(strcmp(p[i+c].blood,"o+")==0)||(strcmp(p[i+c].blood,"O-")==0)||(strcmp(p[i+c].blood,"o-")==0)||
+      (strcmp(p[i+c].blood,"AB+")==0)||(strcmp(p[i+c].blood,"ab+")==0)||(strcmp(p[i+c].blood,"AB-")==0)||(strcmp(p[i+c].blood,"ab-")==0))
+       inblood=1;
+
+       if (inblood == 0)
+        {
+     cout <<"\n wrong input try again";
+     goto again;
+        }
 
      system("cls");
 
@@ -279,7 +299,7 @@ cin>>p[i+c].weight;
 cout<<"\nEnter Height in Meters : ";
 cin>>p[i+c].height;
 
-p[i+c].height=p[i+c].height*p[i+c].height;
+p[i+c].heightT=p[i+c].height*p[i+c].height;
 p[i+c].bmi= p[i+c].weight/p[i+c].height;
 
 if(p[i+c].bmi<18.5)
@@ -321,18 +341,19 @@ cin>>p[i+c].no_surgeries;
 cin.ignore();
 
 
-cout<<"\nEnter the name of  allergies if they have any or say non: "<<endl;
+cout<<"\nEnter the name of  allergies if they have any or say none: "<<endl;
 getline(cin,p[i+c].allergies);
 
 
 cout<<"\nEnter the symptoms of the disease that you are experiencing: "<<endl;
 getline(cin,p[i+c].symptoms);
+
 system("cls");
 
 cout<<"\n\n==============================================Appointment====================================================="<<endl;
 cout<<"\nHere is the doctors schedule "<<endl;
 
-    cout<<"\nDoctor's name: "<<Hos.hos_doc.name<<"\nAge: "<<Hos.hos_doc.age<<"\nSex: "<<Hos.hos_doc.sex<<"\nSpeciality name: "<<Hos.hos_doc.specialst<<"\nSchedule: "<<Hos.hos_doc.schedule;
+    cout<<"\nDoctor's name: "<<Hos.hos_doc.name<<"\nSex: "<<Hos.hos_doc.sex<<"\nSpeciality name: "<<Hos.hos_doc.specialst<<"\nSchedule: "<<Hos.hos_doc.schedule;
 
     cout<<" \n\nNow you can see when the doctor is available and choose your appointment."<<endl;
 
@@ -355,8 +376,20 @@ cout<<"\nThank you the information have been registered\n";
 
 cout<<"\t\t\t\t\tDate"<<p[i+c].dateadd.dd<<"/"<<p[i+c].dateadd.mm<<"/"<<p[i+c].dateadd.yy<<endl;
 
-    cout<<"create passcode: ";
+    trya:
+    cout<<"\ncreate password: ";
     cin>>p[i+c].passcode;
+
+    cout<<"\nRe-enter your password";
+    cin>>p[i+c].passcode2;
+
+    if(p[i+c].passcode == p[i+c].passcode2)
+        cout<<"\npassword successfully created";
+    else
+    {
+        cout<<"passwords doesn't match please try again : ";
+        goto trya;
+    }
     p[i+c].id=id;
     c++;
     id++;
@@ -389,7 +422,7 @@ cout<<"\nAge :                   "<<setw (32)<< left<<p[i].age;
 cout<<"\nSex :                   "<<setw (32)<< left<<p[i].sex;
 cout<<"\nBlood Group :           "<<setw (32)<< left<<p[i].blood;
 cout<<"\nBMI :                  "<<setw (30)<<left<<p[i+c].bmi;
-cout<<"\Medicine taken:         "<<setw (30)<< left<<p[i].medicine_taken<<endl;
+cout<<"\nMedicine taken:         "<<setw (30)<< left<<p[i].medicine_taken<<endl;
 cout<<"Number of medicine:     "<<setw (30)<< left<<p[i].no_medicine<<endl;
 cout<<"Name of illnesses:      "<<setw (30)<< left<<p[i].illnesses<<endl;
 cout<<"Type of surgeries:      "<<setw (30)<< left<<p[i].surgeries<<endl;
@@ -411,13 +444,13 @@ cout<<"\n\n================================================================"<<en
 //login if already registered
 void oldPatient(){
 
-int pass,response;
-
+int response;
+string pass;
     cout<<"\nEnter passcode";
     cin>>pass;//asks the password that the patient have entered when he/she was registering
 
     for(int i = 0; i<c; i++){
-    if( pass==p[i].passcode ){
+    if( pass==p[i].passcode && pass==p[i].passcode2 ){
 
         cout<<"patient ID: ";
         cout<<p[i].id;
@@ -469,6 +502,7 @@ cout<<"\n\n\n================================================================"<<
         cout<<p[i].prescription<<endl;
         cout<<"\n";
     }
+    else cout<<"password not found ";
     }
 
     do{
@@ -481,14 +515,15 @@ cout<<"\n\n\n================================================================"<<
 }
 void inpatient()
 {
-    int response,pass;
+    int response;
+    string pass;
      int days[100],cost[100];
      cout<<"\nEnter passcode";
     cin>>pass;//asks the password that the patient have entered when he/she was registering
 
 
 for(int i = 0; i<c; i++){
-    if( pass==p[i].passcode ){
+    if( pass==p[i].passcode&&pass==p[i].passcode2 ){
 
 
     cout<< "Enter the number of days you have Stayed in the hospital : ";
@@ -520,14 +555,15 @@ if(p[i].days<=1)
 }
 void edit()
 {
-        int response,pass;
+        int response;
+        string pass;
          int choose,i;
 cout<<"\nenter passcode";
     cin>>pass;//asks the password that the patient have entered when he/she was registering
 
 
 for(int i = 0; i<c; i++){
-    if( pass==p[i].passcode ){
+    if( pass==p[i].passcode&&pass==p[i].passcode2 ){
 
 cout<<"================================================================"<<endl;
 cout<<"\nPatient name :            "<<setw (32)<< left<<p[i].name;
@@ -597,171 +633,4 @@ cin>>choose;
     }while(response!=1);
      system("cls");
      patient();
-
-}
-
-
-//function definition
-//only applicable for doctors
-void doctor(){
-    int c,x,code,response;
-    x=1565;
-cout<<"Enter password:";
-cin>>code;
-if(code==x){
-cout<<"=================Choose your option from listed below==============";
- cout<<"\n\n1.display patients information\n";
- cout<<"2.doctors note for patient\n";
- cout<<"3.back\n";
-
- cout<<"enter your option: ";
- cin>>c;
- cout<<endl;
-
- switch(c){
- case 1:
-     system("cls");
-     display();//calling display funtion
-
-     break;
- case 2:
-     system("cls");
-     medicalTip();//calling medical tip function
-    break;
-
-case 3:
-     system("cls");
-     menu();//if the user press 3 it return to menu function
-
-    break;
- }}
- else
-{cout<<"\nIncorrect password!!!Please try again\n "<<endl;}
- do{
-    cout<<"\npress 1 to go back: ";
-    cin>>response;
-    }while(response!=1);
-     system("cls");
-     doctor();
- }
-//stored medical tip from doctors
-void medicalTip(){
-
-    int response;
-    string rec,tip,pres,check;
-    int pid;
-
-    cout<<"enter patient ID: ";
-    cin>>pid;//entering patients id that he/she uses when they register in order to display their information according to their id number
-
-     for(int i=0; i<c; i++){
-        if(pid==p[i].id){
-
-        cout<<"patient ID: ";
-        cout<<p[i].id;
-
-cout<<"\n name of patient:            "<<setw (32)<<p[i].name;
- cout<<"\npatient age:             "<<setw (32)<<p[i].age;
-cout<<"\nSex :                   "<<setw (32)<<p[i].sex;
-cout<<"\nBlood Group :           "<<setw (32)<<p[i].blood;
-cout<<"\nPatient ID Number :     "<<setw (32)<<p[i].id;
-cout<<"\nBMI :                  "<<setw (30)<<left<<p[i].bmi;
-cout<<"\n\nMedicine taken:         "<<setw (30)<<p[i].medicine_taken<<endl;
-
-cout<<"Number of medicine:     "<<setw (30)<<p[i].no_medicine<<endl;
-cout<<"\nName of illnesses:      "<<setw (30)<<p[i].illnesses<<endl;
-
-cout<<"\nType of surgeries:      "<<setw (30)<<p[i].surgeries<<endl;
-cout<<"Number of surgeries:    "<<setw (30)<<p[i].no_surgeries<<endl;
-
-cout<<"\nType of allergic:       "<<setw (30)<<p[i].allergies<<endl;
-cout<<"\nsymptoms experienced:   "<<setw (30)<<p[i].symptoms<<endl;
-        cout<<"\n";
-        }
-     }
-
-     cout<<"enter tip\n";
-     cin.ignore();
-     getline(cin,tip);
-     fflush(stdin);
-
-   cout<<"enter recommendation\n";
-     cin.ignore();
-     getline(cin,rec);
-     fflush(stdin);
-
-     cout<<"enter check up\n";
-     cin.ignore();
-     getline(cin,check);
-     fflush(stdin);
-
-     cout<<"enter prescription\n";
-    cin.ignore();
-     getline(cin,pres);
-     fflush(stdin);
-
-      for(int i=0; i<c; i++){
-        if(pid==p[i].id){
-             fflush(stdin);//used to copying information to display it in another function
-             p[i].tipFromDoc = tip;
-             fflush(stdin);
-
-             p[i].recommend = rec;
-             fflush(stdin);
-
-             p[i].checkup = check;
-             fflush(stdin);
-
-             p[i].prescription = pres;
-             fflush(stdin);
-
-        }
-        }
-
-    do{
-    cout<<"\npress 1 to go back: ";
-    cin>>response;
-    }while(response!=1);
-     system("cls");
-     doctor();//if the user press 1 it will return back to doctor functions
-
-}
-//hospital
-//hospitals information is stored
-void hospital_information()
-{
-
-Hospitals Hos;
-Hos.name={"Birhanu centralized hospital"};
-
-Hos.service={"\n - short-term hospitalization\n - emergency room services\n - general and specialty surgical services\n - x-ray radiology services \n - laboratory services\n - blood services."};
-Hos.hos_doc={"DR.Firdews Abrar",27,'f',"General Doctor","(Monday-Thursday)=4:00am-11:30pm,(Friday and Saturday)=2:30am-6:00am"};
-
-Hos.hos_add={"Addiss Ababa","Kolfe Keranyo",05,1,"birhanu_centrhos@gmail.com","011-345-654"};
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-cout<<"Name of Hospital: "<<Hos.name<<endl;
-cout<<"\n->Service that "<<Hos.name<<" provide: "<<endl<<Hos.service<<endl;
-cout<<"\n General information:"<<"\n ->President — Peter L. Slavin,\n-> Total certified beds — 907\n-> Total employees (part- and full-time) — 23,302\n-> Total operating revenue — $612 million"<<endl;
-cout<<"\nPatient and surgical statistics: "<<"\n #Total inpatients — 47,250\n #Average length of stay — 5.82 days\n #Admissions to observe — 7,978\n #Total surgical cases — 36,701\n #Inpatient surgical cases — 19,233\n #Ambulatory surgical cases — 17,468"<<endl;
-cout<<"\nDoctors information in "<<Hos.name<<endl;
-cout<<"______________________________________________________"<<endl;
-
-cout<<"\nDoctor's name: "<<Hos.hos_doc.name<<"\nAge: "<<Hos.hos_doc.age<<"\nSex: "<<Hos.hos_doc.sex<<"\nSpeciality name: "<<Hos.hos_doc.specialst<<"\nSchedule: "<<Hos.hos_doc.schedule;
-
-
-cout<<"\n\n________Hospitals Address_____________"<<endl;
-cout<<"\nHispitals city: "<<Hos.hos_add.city<<"\n"<<" KfleKetema: "<<Hos.hos_add.kfleketema<<endl;
-cout<<"kebele: "<<Hos.hos_add.kebele<<"\n"<<" wereda: "<<Hos.hos_add.wereda<<endl;
-cout<<"Hispitals  emailaddress: "<<Hos.hos_add.email<<"\n"<<" phone number: "<<Hos.hos_add.phone<<endl;
-
-cout<<"......................................................"<<endl;
-system("pause");
-system("cls");
-menu();
-
-}
-
-
 
